@@ -333,6 +333,7 @@
   .loc-item{cursor:pointer; transition:transform .15s, box-shadow .15s;}
   .loc-item:hover,.loc-item:focus-visible{transform:translateY(-2px); box-shadow:4px 4px 0 var(--navy); outline:none;}
   .loc-item.active{background:var(--yellow);}
+  .loc-open{display:block; text-align:center; font-family:'Baloo 2',sans-serif; font-weight:700; background:var(--yellow); color:var(--navy); text-decoration:none; padding:10px; border-bottom:4px solid var(--navy);}
   .loc-photo{display:none; width:100%; height:220px; object-fit:cover; border-bottom:4px solid var(--navy);}
   .loc-photo.show{display:block;}
   .class-note{margin:18px auto 0; max-width:520px; text-align:center; font-weight:600; background:var(--yellow); border:2px solid var(--navy); border-radius:14px; padding:10px 16px;}
@@ -743,6 +744,7 @@
     <div class="loc-grid">
       <div class="map-wrap">
         <img id="loc-photo" class="loc-photo" alt="">
+        <a id="loc-open" class="loc-open" href="#" target="_blank" rel="noopener"><span data-id>📍 Buka di Google Maps</span><span data-en>📍 Open in Google Maps</span></a>
         <iframe id="loc-map" src="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
       <div class="loc-list"><p class="loc-tip" data-id>Klik kolam untuk melihat peta dan fotonya.</p><p class="loc-tip" data-en>Click a pool to see its map and photo.</p><div class="loc-list" id="loc-list"></div></div>
@@ -958,10 +960,27 @@
   }).join('');
   applyLangVisibility(locListEl);
 
+  function hucasMapSrc(loc){
+    var raw = String(loc.mapUrl || '').trim();
+    var z = '&t=&z=17&ie=UTF8&iwloc=&output=embed';
+    var m = raw.match(/<iframe[^>]+src=["']([^"']+)["']/i);
+    if(m) raw = m[1].replace(/&amp;/g,'&');
+    if(/google\.[a-z.]+\/maps\/embed/i.test(raw)) return {src: raw, exact: true};
+    if(/^https?:\/\//i.test(raw)){
+      var c = raw.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/) || raw.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/) || raw.match(/[?&](?:q|ll|query|destination)=(-?\d+\.\d+)(?:,|%2C)(-?\d+\.\d+)/);
+      if(c) return {src: 'https://maps.google.com/maps?q=' + c[1] + ',' + c[2] + z, exact: true};
+      var pl = raw.match(/\/maps\/place\/([^\/@?]+)/);
+      if(pl){ try{ return {src: 'https://maps.google.com/maps?q=' + encodeURIComponent(decodeURIComponent(pl[1].replace(/\+/g,' '))) + z, exact: true}; }catch(e){} }
+      if(/maps\.app\.goo\.gl|goo\.gl\/maps/i.test(raw)) return {src: '', exact: false, short: true};
+    }
+    return {src: 'https://maps.google.com/maps?q=' + encodeURIComponent(loc.mapQuery || ((loc.name || '') + ' ' + (loc.area || ''))) + z, exact: false};
+  }
   function selectLoc(i){
     var loc = D.locations[i]; if(!loc) return;
     locListEl.querySelectorAll('.loc-item').forEach(function(el){ el.classList.toggle('active', +el.dataset.i === i); });
-    var src = 'https://maps.google.com/maps?q=' + encodeURIComponent(loc.mapQuery || (loc.name + ' ' + loc.area)) + '&t=&z=16&ie=UTF8&iwloc=&output=embed';
+    var ms = hucasMapSrc(loc); if(!ms.src) ms = hucasMapSrc({mapQuery: loc.mapQuery, name: loc.name, area: loc.area});
+    var src = ms.src;
+    var ob = document.getElementById('loc-open'); var link = /^https?:\/\//i.test(loc.mapUrl || '') ? loc.mapUrl : 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(loc.mapQuery || (loc.name + ' ' + loc.area)); ob.href = link;
     var fr = document.getElementById('loc-map'); if(fr.getAttribute('src') !== src) fr.src = src;
     var ph = document.getElementById('loc-photo');
     if(loc.image){ ph.src = loc.image; ph.alt = 'Kolam renang ' + loc.name + ' ' + loc.area; ph.classList.add('show'); }
