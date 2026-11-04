@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog &amp; Edukasi Renang | HUCAS Swimming Class</title>
+<meta name="description" content="Blog &amp; edukasi renang HUCAS Swimming Class: tips belajar berenang, renang untuk anak, dan manfaat renang. Denpasar, Bali.">
+<meta name="theme-color" content="#FFD400">
+<link rel="icon" href="logo.png">
+<link rel="canonical" href="https://lesrenanghucas.com/blog.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--blue:#2A2FE4; --yellow:#FFD400; --pink:#F31569; --teal:#00BF8F; --navy:#0B1440; --cream:#FFFCF2; --white:#fff;}
+  *{box-sizing:border-box;}
+  body{margin:0; font-family:'Poppins',sans-serif; color:var(--navy); background:var(--cream); -webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:'Baloo 2',sans-serif; line-height:1.15; margin:0;}
+  a{color:inherit;}
+  img{max-width:100%; display:block;}
+  body:not(.lang-en) [data-en]{display:none !important;}
+  body.lang-en [data-id]{display:none !important;}
+
+  header{position:sticky; top:0; z-index:50; background:rgba(255,252,242,.94); backdrop-filter:blur(6px); border-bottom:3px solid var(--navy);}
+  .nav-inner{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 24px; max-width:1140px; margin:0 auto;}
+  .brand{display:flex; align-items:center; gap:10px; text-decoration:none;}
+  .brand img{height:44px; width:auto;}
+  .brand-text{font-family:'Baloo 2',sans-serif; font-weight:800; font-size:1.25rem;}
+  .nav-right{display:flex; align-items:center; gap:12px;}
+  .lang-switch{display:flex; background:var(--navy); border-radius:999px; padding:4px; gap:2px;}
+  .lang-switch button{font-family:'Baloo 2',sans-serif; font-weight:700; font-size:.8rem; border:none; background:transparent; color:#ffffff99; padding:7px 14px; border-radius:999px; cursor:pointer;}
+  .lang-switch button.active{background:var(--yellow); color:var(--navy);}
+  .btn{display:inline-flex; align-items:center; gap:8px; font-family:'Baloo 2',sans-serif; font-weight:700; padding:12px 26px; border-radius:999px; text-decoration:none; border:3px solid var(--navy); background:var(--yellow); color:var(--navy); box-shadow:4px 4px 0 var(--navy);}
+  .btn.teal{background:var(--teal);}
+  @media(max-width:640px){ .nav-cta{display:none;} }
+
+  .wrap{max-width:760px; margin:0 auto; padding:40px 24px 70px;}
+  .crumbs{font-size:.82rem; color:#6a6f96; margin-bottom:18px;}
+  .crumbs a{text-decoration:none; font-weight:600; color:var(--blue);}
+  .tag{display:inline-block; font-family:'Baloo 2',sans-serif; font-weight:700; font-size:.75rem; background:var(--yellow); border:2px solid var(--navy); border-radius:999px; padding:4px 14px; margin-bottom:14px;}
+  h1{font-size:clamp(1.9rem,5vw,2.7rem); color:var(--navy);}
+  .meta{margin:14px 0 24px; font-size:.85rem; color:#6a6f96; font-weight:500;}
+  .cover{border:3px solid var(--navy); border-radius:22px; overflow:hidden; margin-bottom:30px; box-shadow:6px 6px 0 var(--navy);}
+  .cover img{width:100%; height:auto; max-height:420px; object-fit:cover;}
+  .content{font-size:1.04rem; line-height:1.8; color:#26305c;}
+  .content h2{font-size:1.45rem; color:var(--blue); margin:34px 0 10px;}
+  .content h3{font-size:1.2rem; color:var(--navy); margin:26px 0 8px;}
+  .content p{margin:0 0 1.1em;}
+  .content ul{margin:0 0 1.2em; padding-left:1.3em;}
+  .content li{margin-bottom:.4em;}
+  .content a{color:var(--pink); font-weight:600;}
+  .content img{border-radius:14px; margin:20px 0;}
+  .cta-box{margin-top:44px; background:var(--navy); color:var(--white); border-radius:24px; padding:32px; text-align:center;}
+  .cta-box h2{font-size:1.5rem; color:var(--yellow); margin-bottom:10px;}
+  .cta-box p{margin:0 0 20px; color:#dfe1ff;}
+  .related{margin-top:50px;}
+  .related h2{font-size:1.3rem; margin-bottom:16px;}
+  .rel-list{display:grid; gap:12px;}
+  .rel-item{display:block; text-decoration:none; background:var(--white); border:3px solid var(--navy); border-radius:16px; padding:16px 20px;}
+  .rel-item b{font-family:'Baloo 2',sans-serif; font-size:1.05rem; display:block;}
+  .rel-item span{font-size:.84rem; color:#6a6f96;}
+  .notfound{text-align:center; padding:80px 0;}
+  footer{background:var(--navy); color:#c7cbee; text-align:center; padding:30px 24px; font-size:.85rem;}
+  footer a{color:var(--yellow);}
+  .blog-wrap{max-width:1140px; margin:0 auto; padding:40px 24px 70px;}
+  .blog-wrap h1{margin-bottom:8px;}
+  .blog-sub{color:#4b5180; margin:0 0 28px;}
+  .bl-grid{display:grid; grid-template-columns:1fr; gap:26px;}
+  @media(min-width:760px){ .bl-grid{grid-template-columns:repeat(3,1fr);} }
+  .bl-card{border:3px solid var(--navy); border-radius:22px; overflow:hidden; display:flex; flex-direction:column; background:var(--white); text-decoration:none;}
+  .bl-thumb{height:170px; background:repeating-linear-gradient(135deg,var(--blue),var(--blue) 14px,#1f23b8 14px,#1f23b8 28px); background-size:cover; background-position:center;}
+  .bl-body{padding:20px 22px 24px; display:flex; flex-direction:column; gap:8px; flex:1;}
+  .bl-body h2{font-size:1.12rem;}
+  .bl-body p{font-size:.9rem; color:#33395c; margin:0; flex:1;}
+  .bl-date{font-size:.78rem; color:#8a8fb5; font-weight:600;}
+  .bl-more{font-weight:700; color:var(--pink); font-size:.88rem; margin-top:6px;}
+</style>
+</head>
+<body>
+<header>
+  <div class="nav-inner">
+    <a class="brand" href="index.html"><img src="logo.png" alt="HUCAS logo"><span class="brand-text">HUCAS</span></a>
+    <div class="nav-right">
+      <div class="lang-switch">
+        <button id="btn-id" class="active" onclick="setLang('id')">ID</button>
+        <button id="btn-en" onclick="setLang('en')">EN</button>
+      </div>
+      <a class="btn teal nav-cta wa-link" href="#" target="_blank" rel="noopener"><span data-id>Chat WhatsApp</span><span data-en>Chat on WhatsApp</span></a>
+    </div>
+  </div>
+</header>
+
+<main class="blog-wrap" id="main"></main>
+
+<footer>
+  <div>© 2026 HUCAS Swimming Class · <a href="index.html">Home</a> · <a id="foot-ig" href="#" target="_blank" rel="noopener">Instagram</a> · <a href="privacy.html">Privasi / Privacy</a> <a href="#" data-cookie-settings style="display:none">· Cookie</a></div>
+</footer>
+
+<script src="data.js"></script>
+<script src="tracking.js"></script>
+<script>
+  var D = window.HUCAS_DATA;
+  var currentLang = 'id';
+  try{ if(localStorage.getItem('hucas-lang') === 'en') currentLang = 'en'; }catch(e){}
+  function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function pick(o,f){ return o[f+'_'+currentLang] || o[f+'_id'] || o[f+'_en'] || ''; }
+  function render(){
+    var en = currentLang === 'en';
+    var posts = (D.blog || []).slice().sort(function(a,b){ return (b.date||'').localeCompare(a.date||''); });
+    document.title = (en ? 'Blog & Swimming Education' : 'Blog & Edukasi Renang') + ' | HUCAS Swimming Class';
+    var m = document.querySelector('meta[name="description"]');
+    if(m) m.content = en ? 'HUCAS Swimming Class blog: tips for learning to swim, kids swimming and the benefits of swimming. Denpasar, Bali.' : 'Blog & edukasi renang HUCAS Swimming Class: tips belajar berenang, renang untuk anak, dan manfaat renang. Denpasar, Bali.';
+    document.getElementById('main').innerHTML =
+      '<nav class="crumbs"><a href="index.html">Home</a> › Blog</nav>' +
+      '<h1>' + (en ? 'Blog & Education' : 'Blog & Edukasi') + '</h1>' +
+      '<p class="blog-sub">' + (en ? 'Tips, guides and updates about learning to swim with HUCAS.' : 'Tips, panduan, dan kabar seputar belajar berenang bersama HUCAS.') + '</p>' +
+      (posts.length ? '<div class="bl-grid">' + posts.map(function(p){
+        var d = new Date(p.date + 'T00:00:00').toLocaleDateString(en ? 'en-US' : 'id-ID', {day:'numeric', month:'long', year:'numeric'});
+        return '<a class="bl-card" href="article.html?slug=' + encodeURIComponent(p.slug || p.id) + '">' +
+          '<div class="bl-thumb"' + (p.image ? ' style="background-image:url(' + esc(p.image) + ')"' : '') + '></div>' +
+          '<div class="bl-body"><span class="tag">' + esc(pick(p,'tag')) + '</span><span class="bl-date">' + esc(d) + '</span>' +
+          '<h2>' + esc(pick(p,'title')) + '</h2><p>' + esc(pick(p,'excerpt')) + '</p>' +
+          '<span class="bl-more">' + (en ? 'Read more →' : 'Baca selengkapnya →') + '</span></div></a>';
+      }).join('') + '</div>' : '<p>' + (en ? 'Articles coming soon.' : 'Artikel segera hadir.') + '</p>');
+  }
+  function setLang(lang){
+    currentLang = lang;
+    document.body.classList.toggle('lang-en', lang === 'en');
+    document.getElementById('btn-id').classList.toggle('active', lang === 'id');
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    document.documentElement.lang = lang;
+    try{ localStorage.setItem('hucas-lang', lang); }catch(e){}
+    render();
+  }
+  document.querySelectorAll('.wa-link').forEach(function(a){ a.href = 'https://wa.me/' + D.brand.phone; });
+  document.getElementById('foot-ig').href = 'https://instagram.com/' + D.brand.instagram;
+  setLang(currentLang);
+</script>
+</body>
+</html>

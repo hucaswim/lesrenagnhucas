@@ -136,7 +136,7 @@
     if(!post){
       document.title = (currentLang === 'en' ? 'Article not found' : 'Artikel tidak ditemukan') + ' | ' + biz;
       setMeta('name', 'robots', 'noindex');
-      main.innerHTML = '<div class="notfound"><h1>' + (currentLang === 'en' ? 'Article not found' : 'Artikel tidak ditemukan') + '</h1><p><a class="btn" href="index.html#blog">' + (currentLang === 'en' ? 'Back to blog' : 'Kembali ke blog') + '</a></p></div>';
+      main.innerHTML = '<div class="notfound"><h1>' + (currentLang === 'en' ? 'Article not found' : 'Artikel tidak ditemukan') + '</h1><p><a class="btn" href="blog.html">' + (currentLang === 'en' ? 'Back to blog' : 'Kembali ke blog') + '</a></p></div>';
       return;
     }
 
@@ -149,7 +149,7 @@
     var related = (D.blog || []).filter(function(p){ return p !== post; }).slice(0, 3);
 
     main.innerHTML =
-      '<nav class="crumbs"><a href="index.html">Home</a> › <a href="index.html#blog">Blog</a> › ' + esc(title) + '</nav>' +
+      '<nav class="crumbs"><a href="index.html">Home</a> › <a href="blog.html">Blog</a> › ' + esc(title) + '</nav>' +
       '<article>' +
         '<span class="tag">' + esc(tag) + '</span>' +
         '<h1>' + esc(title) + '</h1>' +
@@ -195,7 +195,7 @@
          publisher: {'@type': 'Organization', name: biz, logo: base ? {'@type':'ImageObject', url: base + '/logo.png'} : undefined}},
         {'@type': 'BreadcrumbList', itemListElement: [
           {'@type':'ListItem', position:1, name:'Home', item: base ? base + '/' : undefined},
-          {'@type':'ListItem', position:2, name:'Blog', item: base ? base + '/#blog' : undefined},
+          {'@type':'ListItem', position:2, name:'Blog', item: base ? base + '/blog.html' : undefined},
           {'@type':'ListItem', position:3, name:title}
         ]}
       ]
