@@ -16,7 +16,7 @@
 
   function getConsent(){ try{ return localStorage.getItem(KEY); }catch(e){ return null; } }
   function setConsent(v){ try{ localStorage.setItem(KEY, v); }catch(e){} }
-  function lang(){ try{ return localStorage.getItem('hucas-lang') === 'en' ? 'en' : 'id'; }catch(e){ return 'id'; } }
+  function lang(){ return (document.documentElement.lang || 'id').slice(0, 2) === 'en' ? 'en' : 'id'; }
 
   function loadTrackers(){
     if(loaded) return;
@@ -68,7 +68,7 @@
     box.id = 'hucas-consent';
     box.setAttribute('role', 'dialog'); box.setAttribute('aria-label', 'Cookie');
     box.style.cssText = 'position:fixed;left:12px;right:12px;bottom:12px;z-index:9999;max-width:620px;margin:0 auto;background:#0B1440;color:#fff;border:3px solid #FFD400;border-radius:18px;padding:16px 18px;font:14px/1.55 Poppins,system-ui,sans-serif;box-shadow:0 8px 30px rgba(0,0,0,.3);';
-    box.innerHTML = '<div style="margin-bottom:12px">' + t.msg + ' <a href="privacy.html" style="color:#FFD400">' + t.more + '</a></div>' +
+    box.innerHTML = '<div style="margin-bottom:12px">' + t.msg + ' <a href="/privacy.html" style="color:#FFD400">' + t.more + '</a></div>' +
       '<div style="display:flex;gap:10px;flex-wrap:wrap">' +
       '<button id="hc-ok" style="font:700 14px Poppins,system-ui,sans-serif;background:#00BF8F;color:#0B1440;border:2px solid #fff;border-radius:999px;padding:8px 22px;cursor:pointer">' + t.ok + '</button>' +
       '<button id="hc-no" style="font:700 14px Poppins,system-ui,sans-serif;background:transparent;color:#fff;border:2px solid #fff;border-radius:999px;padding:8px 22px;cursor:pointer">' + t.no + '</button></div>';
