@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HUCAS Admin — Editor Konten</title>
+<meta name="robots" content="noindex, nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#2A2FE4; --yellow:#FFD400; --pink:#F31569; --teal:#00BF8F; --navy:#0B1440; --cream:#FFFCF2; --white:#fff;
+  }
+  *{box-sizing:border-box;}
+  body{font-family:'Poppins',sans-serif; margin:0; background:var(--cream); color:var(--navy);}
+  h1,h2,h3{font-family:'Baloo 2',sans-serif; margin:0;}
+  header{background:var(--navy); color:#fff; padding:18px 28px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;}
+  header h1{font-size:1.3rem; color:var(--yellow);}
+  header .sub{font-size:.8rem; color:#c7cbee; margin-top:2px;}
+  .wrap{max-width:1040px; margin:0 auto; padding:28px;}
+  .toolbar{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:24px;}
+  button{
+    font-family:'Baloo 2',sans-serif; font-weight:700; font-size:.88rem; cursor:pointer;
+    border:3px solid var(--navy); border-radius:999px; padding:10px 20px; background:var(--white); color:var(--navy);
+  }
+  button.primary{background:var(--teal);}
+  button.warn{background:var(--pink); color:#fff;}
+  button.yellow{background:var(--yellow);}
+  button:hover{transform:translateY(-2px);}
+  .tabs{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:22px;}
+  .tab{padding:10px 18px; border-radius:999px; border:2px solid var(--navy); background:#fff; font-weight:700; font-family:'Baloo 2',sans-serif; cursor:pointer; font-size:.85rem;}
+  .tab.active{background:var(--navy); color:var(--yellow);}
+  .panel{display:none;}
+  .panel.active{display:block;}
+  .card{background:#fff; border:2px solid var(--navy); border-radius:16px; padding:20px; margin-bottom:16px; position:relative;}
+  .card .remove{position:absolute; top:12px; right:12px;}
+  label{display:block; font-size:.78rem; font-weight:700; margin:10px 0 4px; color:#4a4f78;}
+  input[type=text], input[type=date], textarea, select{
+    width:100%; padding:9px 12px; border:2px solid #d8d8ee; border-radius:10px; font-family:inherit; font-size:.92rem; background:#fbfbff;
+  }
+  textarea{min-height:64px; resize:vertical;}
+  .row{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  .row3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px;}
+  @media(max-width:640px){ .row, .row3{grid-template-columns:1fr;} }
+  .checkbox-row{display:flex; align-items:center; gap:8px; margin-top:12px;}
+  .checkbox-row input{width:auto;}
+  .section-title{font-size:1.1rem; margin:26px 0 14px; display:flex; justify-content:space-between; align-items:center;}
+  .schedule-block{border:1px dashed #c9c9e6; border-radius:12px; padding:12px; margin-top:10px;}
+  .schedule-block h4{font-size:.85rem; margin-bottom:8px; color:var(--pink);}
+  .sched-item{display:grid; grid-template-columns:1fr 1fr 1fr auto; gap:8px; margin-bottom:8px; align-items:center;}
+  @media(max-width:640px){ .sched-item{grid-template-columns:1fr;} }
+  .small-btn{padding:6px 12px; font-size:.76rem;}
+  .status{
+    position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
+    background:var(--navy); color:var(--yellow); padding:10px 22px; border-radius:999px; font-weight:700;
+    font-family:'Baloo 2',sans-serif; font-size:.85rem; opacity:0; transition:opacity .3s; pointer-events:none;
+  }
+  .status.show{opacity:1;}
+  .note{background:#fff7d6; border:2px solid var(--yellow); border-radius:14px; padding:14px 18px; font-size:.86rem; margin-bottom:24px; line-height:1.6;}
+  .file-input{display:none;}
+  .img-field{margin-top:14px;}
+  .img-row{display:grid; grid-template-columns:160px 1fr; gap:14px; align-items:start;}
+  @media(max-width:640px){ .img-row{grid-template-columns:1fr;} }
+  .img-prev{width:160px; height:120px; border:2px dashed #c9c9e6; border-radius:12px; display:flex; align-items:center; justify-content:center; overflow:hidden; background:#fbfbff; font-size:.75rem; color:#8a8fb5; text-align:center;}
+  .img-prev img{width:100%; height:100%; object-fit:cover;}
+  .img-actions{display:flex; flex-direction:column; gap:8px; align-items:flex-start;}
+  .img-actions input[type=text]{width:100%;}
+  .img-info{font-size:.74rem; color:#7a7fae;}
+  .counter{font-size:.74rem; font-weight:600; margin-top:4px; color:#7a7fae;}
+  .counter.bad{color:var(--pink);}
+  .counter.good{color:#009a73;}
+  .hint{font-size:.8rem; color:#6a6f96; line-height:1.6; margin:0 0 14px;}
+  textarea.tall{min-height:220px; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.85rem; line-height:1.6;}
+  .checklist{margin:0; padding-left:18px; font-size:.86rem; line-height:1.8;}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>🏊 HUCAS Admin</h1>
+    <div class="sub">Editor konten website — coach, lokasi, harga, gambar, SEO &amp; blog · <span id="size-info"></span></div>
+  </div>
+  <div class="toolbar">
+    <button onclick="document.getElementById('importFile').click()">📂 Import data.js</button>
+    <input type="file" id="importFile" class="file-input" accept=".js,.json">
+    <button class="primary" onclick="saveLocal()">💾 Simpan (browser ini)</button>
+    <button class="yellow" onclick="exportData()">⬇️ Download data.js</button>
+    <button class="primary" onclick="publishSite()">🚀 Publikasikan</button>
+    <button onclick="openGh()" title="Pengaturan GitHub">⚙️</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="note">
+    <b>Cara pakai:</b> Edit data di bawah, lalu klik <b>🚀 Publikasikan</b>. Admin mengirim data ke GitHub dan website diperbarui otomatis dalam 1–2 menit.
+    Pertama kali, klik <b>⚙️</b> dan isi token GitHub (lihat PANDUAN-PUBLIKASI.md). Tombol <b>Download data.js</b> tetap ada sebagai cadangan.
+  </div>
+
+  <div id="ghDlg" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:50;align-items:center;justify-content:center;padding:16px;">
+    <div style="background:#fff;border-radius:14px;padding:20px;max-width:460px;width:100%;box-shadow:0 10px 40px rgba(0,0,0,.3);">
+      <h3 style="margin:0 0 6px;">⚙️ Pengaturan Publikasi (GitHub)</h3>
+      <p class="hint" style="margin:0 0 10px;">Disimpan hanya di browser ini. Jangan bagikan token ke siapa pun.</p>
+      <label>Repository (pemilik/nama)</label>
+      <input id="ghRepo" placeholder="hucaswim/lesrenagnhucas">
+      <label style="margin-top:8px;display:block;">Branch</label>
+      <input id="ghBranch" placeholder="main">
+      <label style="margin-top:8px;display:block;">Token GitHub (Fine-grained)</label>
+      <input id="ghToken" type="password" placeholder="github_pat_...">
+      <div style="margin-top:14px;display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;">
+        <button onclick="clearGh()" class="warn">Hapus token</button>
+        <button onclick="closeGh()">Batal</button>
+        <button class="primary" onclick="saveGh()">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="showPanel('panel-brand', this)">Kontak</div>
+    <div class="tab" onclick="showPanel('panel-coaches', this)">Coach</div>
+    <div class="tab" onclick="showPanel('panel-locations', this)">Lokasi &amp; Jadwal</div>
+    <div class="tab" onclick="showPanel('panel-pricing', this)">Harga</div>
+    <div class="tab" onclick="showPanel('panel-levels', this)">Level System</div>
+    <div class="tab" onclick="showPanel('panel-faq', this)">FAQ</div>
+    <div class="tab" onclick="showPanel('panel-blog', this)">Blog</div>
+    <div class="tab" onclick="showPanel('panel-testi', this)">Testimoni</div>
+    <div class="tab" onclick="showPanel('panel-tracking', this)">Pelacakan</div>
+    <div class="tab" onclick="showPanel('panel-images', this)">Gambar</div>
+    <div class="tab" onclick="showPanel('panel-seo', this)">SEO</div>
+  </div>
+
+  <!-- BRAND / CONTACT -->
+  <div class="panel active" id="panel-brand">
+    <div class="card">
+      <label>Nomor WhatsApp (format 62xxxxxxxxxx, tanpa +)</label>
+      <input type="text" id="b-phone">
+      <label>Nomor WhatsApp tampilan (contoh: 082145073356)</label>
+      <input type="text" id="b-phoneDisplay">
+      <label>Email</label>
+      <input type="text" id="b-email">
+      <label>WhatsApp Bisnis untuk formulir booking (format 62xxxxxxxxxx, tanpa +)</label>
+      <input type="text" id="b-waBusiness" placeholder="6285111411246">
+      <label>Tampilan nomor WhatsApp Bisnis</label>
+      <input type="text" id="b-waBusinessDisplay" placeholder="+62 851-1141-1246">
+      <label>Link WhatsApp Bisnis (wa.me/message/...)</label>
+      <input type="text" id="b-waBusinessLink" placeholder="https://wa.me/message/XXXX">
+      <label>Username Instagram (tanpa @)</label>
+      <input type="text" id="b-instagram">
+      <label>URL Google Apps Script (form booking → Google Sheets)</label>
+      <input type="text" id="b-webhook" placeholder="https://script.google.com/macros/s/xxx/exec">
+      <div class="hint" style="margin-top:6px;">Kosongkan dulu kalau belum setup — form booking tetap jalan langsung ke WhatsApp. Lihat SETUP-GUIDE.md.</div>
+    </div>
+  </div>
+
+  <!-- COACHES -->
+  <div class="panel" id="panel-coaches">
+    <div class="section-title">Daftar Coach <button class="small-btn primary" onclick="addCoach()">+ Tambah Coach</button></div>
+    <div id="coach-list"></div>
+  </div>
+
+  <!-- LOCATIONS -->
+  <div class="panel" id="panel-locations">
+    <div class="section-title">Lokasi Kolam <button class="small-btn primary" onclick="addLocation()">+ Tambah Lokasi</button></div>
+    <div id="location-list"></div>
+  </div>
+
+  <!-- PRICING -->
+  <div class="panel" id="panel-pricing">
+    <div class="section-title">Adult Group Class <button class="small-btn primary" onclick="addPrice('adult')">+ Tambah Paket</button></div>
+    <div id="price-adult"></div>
+    <div class="card"><label>Catatan di bawah harga Adult Group Class (ID) — kosongkan jika tidak perlu</label><input type="text" id="pn-adult-id"><label>Catatan (EN)</label><input type="text" id="pn-adult-en"></div>
+    <div class="section-title">Kids Group Class <button class="small-btn primary" onclick="addPrice('kids')">+ Tambah Paket</button></div>
+    <div id="price-kids"></div>
+    <div class="card"><label>Catatan di bawah harga Kids Group Class (ID) — kosongkan jika tidak perlu</label><input type="text" id="pn-kids-id"><label>Catatan (EN)</label><input type="text" id="pn-kids-en"></div>
+    <div class="section-title">Private 1-on-1 <button class="small-btn primary" onclick="addPrice('private')">+ Tambah Paket</button></div>
+    <div id="price-private"></div>
+    <div class="card"><label>Catatan di bawah harga Private 1-on-1 (ID) — kosongkan jika tidak perlu</label><input type="text" id="pn-private-id"><label>Catatan (EN)</label><input type="text" id="pn-private-en"></div>
+  </div>
+
+  <!-- LEVEL SYSTEM -->
+  <div class="panel" id="panel-levels">
+    <div class="section-title">Student Level System <span style="font-size:.75rem; font-weight:500; color:#7a7fae;">(urutan = urutan level, tidak bisa ditambah/hapus untuk jaga 1–5)</span></div>
+    <div id="level-admin-list"></div>
+  </div>
+
+  <!-- PELACAKAN -->
+  <div class="panel" id="panel-tracking">
+    <div class="section-title">Pelacakan Pengunjung</div>
+    <p class="hint">Tempel ID di bawah, <b>Download data.js</b>, lalu upload ulang. Kosongkan kolom yang tidak dipakai. Kalau keduanya kosong, tidak ada pelacak dan tidak ada banner cookie. Pelacak hanya aktif setelah pengunjung menekan <b>Terima</b> pada banner cookie, dan data pribadi (nama, nomor WA) tidak dikirim ke pelacak.</p>
+    <div class="card">
+      <label>Google Analytics 4 — Measurement ID</label>
+      <input type="text" id="trk-gaId" placeholder="G-XXXXXXXXXX">
+      <div class="counter" id="trk-ga-msg"></div>
+      <div class="hint" style="margin-top:6px;">Cara dapat: analytics.google.com → Admin → Create property → Data streams → Web → isi alamat website → salin <b>Measurement ID</b> (diawali G-).</div>
+      <label style="margin-top:18px;">Meta Pixel ID (Facebook/Instagram Ads)</label>
+      <input type="text" id="trk-metaPixelId" placeholder="1234567890123456">
+      <div class="counter" id="trk-px-msg"></div>
+      <div class="hint" style="margin-top:6px;">Cara dapat: business.facebook.com → Events Manager → Connect data sources → Web → Meta Pixel → salin <b>Pixel ID</b> (angka saja).</div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:1rem;">Event yang tercatat otomatis</h3>
+      <ul class="checklist">
+        <li><b>Kunjungan halaman</b> (website &amp; artikel)</li>
+        <li><b>Lead</b> — form booking dikirim (hanya jenis kelas &amp; lokasi, tanpa nama/nomor)</li>
+        <li><b>Klik WhatsApp</b> — tombol/link WhatsApp ditekan</li>
+      </ul>
+      <p class="hint" style="margin-top:10px;">Tes: buka website, tekan Terima di banner, lalu cek <b>Realtime</b> di Google Analytics dan <b>Test events</b> di Meta Events Manager. Laporan lengkap di GA/Meta butuh beberapa jam untuk muncul.</p>
+    </div>
+  </div>
+
+  <!-- TESTIMONI -->
+  <div class="panel" id="panel-testi">
+    <div class="section-title">Testimoni <button class="small-btn primary" onclick="addTesti()">+ Tambah Testimoni</button></div>
+    <p class="hint">Bagian Testimoni di website <b>tersembunyi sampai ada minimal satu testimoni</b>. Hanya masukkan testimoni <b>asli</b> dan minta izin pemberi testimoni dulu (terutama orang tua murid anak) — cukup nama depan atau inisial untuk menjaga privasi anak.</p>
+    <div id="testi-admin-list"></div>
+  </div>
+
+  <!-- GAMBAR -->
+  <div class="panel" id="panel-images">
+    <div class="section-title">Gambar Website</div>
+    <p class="hint">Gambar yang di-upload otomatis diperkecil &amp; dikompres supaya website tetap ringan. Foto coach diatur di tab <b>Coach</b>, gambar artikel di tab <b>Blog</b>.</p>
+    <div class="card">
+      <h3 style="font-size:1rem;">Gambar utama (Hero) — foto kolam / kelas renang</h3>
+      <p class="hint" style="margin-top:6px;">Tampil di bagian paling atas website, di samping judul. Disarankan foto landscape (rasio ±4:3), minimal lebar 1000px. Kalau dikosongkan, website memakai ilustrasi kolam bawaan.</p>
+      <div id="hero-image-field"></div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:1rem;">Gambar preview saat link dibagikan (Open Graph)</h3>
+      <p class="hint" style="margin-top:6px;">Gambar yang muncul saat link website dibagikan di WhatsApp/Instagram/Facebook. Harus berupa <b>URL lengkap</b> (https://...) ke file gambar yang sudah kamu upload ke hosting, ukuran ideal 1200×630px. Contoh: https://domainkamu.com/og-image.jpg</p>
+      <label>URL gambar</label>
+      <input type="text" id="og-image-url" placeholder="https://domainkamu.com/og-image.jpg">
+    </div>
+  </div>
+
+  <!-- SEO -->
+  <div class="panel" id="panel-seo">
+    <div class="section-title">Pengaturan SEO</div>
+    <p class="hint">SEO = supaya website HUCAS muncul saat orang mencari "les renang bali", "les renang denpasar", dll di Google.</p>
+    <div class="card">
+      <label>Alamat website (domain) — isi setelah website online</label>
+      <input type="text" id="seo-siteUrl" placeholder="https://www.domainkamu.com">
+      <div class="hint" style="margin-top:6px;">Tanpa garis miring di akhir. Dipakai untuk canonical URL, sitemap.xml, dan data terstruktur Google.</div>
+      <label>Nama bisnis</label>
+      <input type="text" id="seo-businessName">
+      <div class="row">
+        <div><label>Judul halaman utama (ID)</label><input type="text" id="seo-title_id"><div class="counter" id="cnt-title_id"></div></div>
+        <div><label>Page title (EN)</label><input type="text" id="seo-title_en"><div class="counter" id="cnt-title_en"></div></div>
+      </div>
+      <div class="row">
+        <div><label>Deskripsi (ID)</label><textarea id="seo-description_id"></textarea><div class="counter" id="cnt-description_id"></div></div>
+        <div><label>Description (EN)</label><textarea id="seo-description_en"></textarea><div class="counter" id="cnt-description_en"></div></div>
+      </div>
+      <label>Kata kunci (pisahkan koma)</label>
+      <textarea id="seo-keywords"></textarea>
+    </div>
+    <div class="card">
+      <h3 style="font-size:1rem;">File SEO otomatis</h3>
+      <p class="hint" style="margin-top:6px;"><b>Catatan:</b> sejak website memakai halaman statis, <code>sitemap.xml</code>, <code>robots.txt</code>, tag SEO, dan data terstruktur dibuat otomatis saat website dibangun. Tombol di bawah tidak perlu dipakai lagi.</p>
+      <p class="hint" style="margin-top:6px;">Klik, lalu upload file hasil download ke folder yang sama dengan index.html di hosting.</p>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="yellow" onclick="downloadSitemap()">⬇️ sitemap.xml</button>
+        <button class="yellow" onclick="downloadRobots()">⬇️ robots.txt</button>
+        <button onclick="showSeoHead()">📋 Tag SEO untuk &lt;head&gt;</button>
+      </div>
+      <div id="seo-head-box" style="display:none; margin-top:14px;">
+        <p class="hint">Salin kode ini lalu tempel menggantikan blok antara <code>&lt;!-- SEO:START --&gt;</code> dan <code>&lt;!-- SEO:END --&gt;</code> di index.html. Ini penting supaya preview WhatsApp/Facebook memakai judul &amp; gambar yang benar (mereka tidak menjalankan JavaScript).</p>
+        <textarea id="seo-head-out" class="tall" readonly></textarea>
+        <button class="small-btn primary" style="margin-top:8px;" onclick="copySeoHead()">Salin</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:1rem;">Checklist SEO setelah website online</h3>
+      <ol class="checklist">
+        <li>Isi alamat website di atas, lalu download <b>sitemap.xml</b> &amp; <b>robots.txt</b> dan upload.</li>
+        <li>Daftarkan website di <b>Google Search Console</b>, lalu kirim sitemap.xml.</li>
+        <li>Buat <b>Google Business Profile</b> untuk HUCAS (penting untuk pencarian lokal "les renang dekat saya") — cantumkan lokasi Renon/Ubung/Padang Sambian.</li>
+        <li>Tulis artikel rutin di tab <b>Blog</b> (judul memuat kata kunci, 300+ kata, isi pertanyaan yang sering dicari orang tua).</li>
+        <li>Pasang link website di bio Instagram <b>@hucasswimmingclass</b>.</li>
+        <li>Pakai gambar asli kelas HUCAS (bukan stok) dan isi nama file gambar yang deskriptif.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="panel" id="panel-faq">
+    <div class="section-title">Pertanyaan &amp; Jawaban <button class="small-btn primary" onclick="addFaq()">+ Tambah FAQ</button></div>
+    <div id="faq-admin-list"></div>
+  </div>
+
+  <!-- BLOG -->
+  <div class="panel" id="panel-blog">
+    <div class="section-title">Artikel Blog <button class="small-btn primary" onclick="addPost()">+ Tambah Artikel</button></div>
+    <div id="blog-list"></div>
+  </div>
+</div>
+
+<div class="status" id="status"></div>
+
+<script src="data.js"></script>
+<script>
+  var D = window.HUCAS_DATA;
+  var uid = 0;
+  function newId(prefix){ uid++; return prefix + '-' + Date.now() + '-' + uid; }
+
+  /* ---------- tabs ---------- */
+  function showPanel(id, el){
+    document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+    el.classList.add('active');
+  }
+
+  /* ---------- status toast ---------- */
+  function toast(msg){
+    var s = document.getElementById('status');
+    s.innerText = msg; s.classList.add('show');
+    setTimeout(function(){ s.classList.remove('show'); }, 1800);
+  }
+
+  /* ---------- BRAND ---------- */
+  function fillBrand(){
+    document.getElementById('b-phone').value = D.brand.phone;
+    document.getElementById('b-phoneDisplay').value = D.brand.phoneDisplay;
+    document.getElementById('b-email').value = D.brand.email;
+    document.getElementById('b-instagram').value = D.brand.instagram;
+    document.getElementById('b-waBusiness').value = D.brand.waBusiness || '';
+    document.getElementById('b-waBusinessDisplay').value = D.brand.waBusinessDisplay || '';
+    document.getElementById('b-waBusinessLink').value = D.brand.waBusinessLink || '';
+    document.getElementById('b-webhook').value = D.brand.bookingWebhookUrl || '';
+  }
+  function readBrand(){
+    D.brand.phone = document.getElementById('b-phone').value.trim();
+    D.brand.phoneDisplay = document.getElementById('b-phoneDisplay').value.trim();
+    D.brand.email = document.getElementById('b-email').value.trim();
+    D.brand.instagram = document.getElementById('b-instagram').value.trim();
+    D.brand.waBusiness = document.getElementById('b-waBusiness').value.trim();
+    D.brand.waBusinessDisplay = document.getElementById('b-waBusinessDisplay').value.trim();
+    D.brand.waBusinessLink = document.getElementById('b-waBusinessLink').value.trim();
+    D.brand.bookingWebhookUrl = document.getElementById('b-webhook').value.trim();
+  }
+
+  /* ---------- COACHES ---------- */
+  function renderCoaches(){
+    var el = document.getElementById('coach-list');
+    el.innerHTML = '';
+    D.coaches.forEach(function(c, i){
+      var card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML =
+        '<button class="remove warn small-btn" onclick="removeCoach(' + i + ')">Hapus</button>' +
+        '<div class="row">' +
+          '<div><label>Nama</label><input type="text" data-f="name" value="' + esc(c.name) + '"></div>' +
+          '<div><label>Inisial (untuk avatar, 2 huruf)</label><input type="text" data-f="initials" value="' + esc(c.initials) + '"></div>' +
+        '</div>' +
+        '<div class="row3">' +
+          '<div><label>Jabatan (ID)</label><input type="text" data-f="role_id" value="' + esc(c.role_id) + '"></div>' +
+          '<div><label>Jabatan (EN)</label><input type="text" data-f="role_en" value="' + esc(c.role_en) + '"></div>' +
+          '<div><label>Mengajar sejak (tahun)</label><input type="text" data-f="since" value="' + esc(c.since) + '"></div>' +
+        '</div>' +
+        '<label>Bio (ID)</label><textarea data-f="bio_id">' + esc(c.bio_id) + '</textarea>' +
+        '<label>Bio (EN)</label><textarea data-f="bio_en">' + esc(c.bio_en) + '</textarea>';
+      card.querySelectorAll('[data-f]').forEach(function(input){
+        input.addEventListener('input', function(){ D.coaches[i][input.dataset.f] = input.value; });
+      });
+      card.appendChild(imageField('Foto Coach (disarankan persegi / potret, wajah di tengah)', function(){ return D.coaches[i].photo; }, function(v){ D.coaches[i].photo = v; }, 700));
+      el.appendChild(card);
+    });
+  }
+  function addCoach(){
+    D.coaches.push({id:newId('coach'), name:'Coach Baru', initials:'CB', since:new Date().getFullYear(), role_id:'Coach Renang', role_en:'Swim Coach', bio_id:'', bio_en:''});
+    renderCoaches();
+  }
+  function removeCoach(i){ D.coaches.splice(i,1); renderCoaches(); }
+
+  /* ---------- LOCATIONS ---------- */
+  var schedTypes = [['adult','Dewasa'], ['kids','Kids Group Class'], ['private','Private']];
+  function renderLocations(){
+    var el = document.getElementById('location-list');
+    el.innerHTML = '';
+    D.locations.forEach(function(loc, i){
+      var card = document.createElement('div');
+      card.className = 'card';
+      var schedHtml = schedTypes.map(function(st){
+        var type = st[0], label = st[1];
+        var itemsHtml = (loc.schedules[type] || []).map(function(it, j){
+          return '<div class="sched-item">' +
+            '<input type="text" placeholder="Jam (08:00 – 09:00)" value="' + esc(it.time) + '" onchange="updateSchedItem(' + i + ',\'' + type + '\',' + j + ',\'time\',this.value)">' +
+            '<input type="text" placeholder="Hari (ID)" value="' + esc(it.days_id) + '" onchange="updateSchedItem(' + i + ',\'' + type + '\',' + j + ',\'days_id\',this.value)">' +
+            '<input type="text" placeholder="Days (EN)" value="' + esc(it.days_en) + '" onchange="updateSchedItem(' + i + ',\'' + type + '\',' + j + ',\'days_en\',this.value)">' +
+            '<button class="small-btn warn" onclick="removeSchedItem(' + i + ',\'' + type + '\',' + j + ')">✕</button>' +
+          '</div>';
+        }).join('');
+        return '<div class="schedule-block"><h4>' + label + '</h4>' + itemsHtml +
+          '<button class="small-btn" onclick="addSchedItem(' + i + ',\'' + type + '\')">+ Tambah jadwal ' + label + '</button></div>';
+      }).join('');
+      card.innerHTML =
+        '<button class="remove warn small-btn" onclick="removeLocation(' + i + ')">Hapus</button>' +
+        '<div class="row">' +
+          '<div><label>Nama Kolam</label><input type="text" data-f="name" value="' + esc(loc.name) + '"></div>' +
+          '<div><label>Area / Kecamatan</label><input type="text" data-f="area" value="' + esc(loc.area) + '"></div>' +
+        '</div>' +
+        '<div class="loc-img-slot"></div>' +
+        '<div class="row">' +
+          '<div><label>Deskripsi halaman lokasi (ID) — opsional, tampil di halaman &quot;Les Renang di ' + esc(loc.area) + '&quot;</label><textarea data-f="desc_id" placeholder="Kosongkan = teks otomatis">' + esc(loc.desc_id || '') + '</textarea></div>' +
+          '<div><label>Location page description (EN) — optional</label><textarea data-f="desc_en" placeholder="Empty = automatic text">' + esc(loc.desc_en || '') + '</textarea></div>' +
+        '</div>' +
+        '<label>Link Google Maps lokasi (agar titik tepat)</label><input type="text" data-f="mapUrl" placeholder="Tempel link panjang Google Maps, atau kode embed" value="' + esc(loc.mapUrl || '') + '">' +
+        '<div class="hint map-status" style="margin:4px 0 10px;"></div>' +
+        '<label>Kata kunci pencarian Google Maps (cadangan jika link kosong)</label><input type="text" data-f="mapQuery" value="' + esc(loc.mapQuery) + '">' +
+        '<div class="row">' +
+          '<div><label>Catatan (ID)</label><input type="text" data-f="note_id" value="' + esc(loc.note_id) + '"></div>' +
+          '<div><label>Catatan (EN)</label><input type="text" data-f="note_en" value="' + esc(loc.note_en) + '"></div>' +
+        '</div>' +
+        schedHtml;
+      card.querySelector('.loc-img-slot').appendChild(imageField('Foto kolam (tampil saat lokasi dipilih di website)', function(){ return D.locations[i].image; }, function(v){ D.locations[i].image = v; }, 900));
+      var st = card.querySelector('.map-status');
+      function mapStatus(){
+        var r = hucasMapSrc(D.locations[i]);
+        st.textContent = r.short ? '⚠ Link pendek (maps.app.goo.gl) tidak bisa dipakai untuk peta. Buka link itu di browser, salin alamat panjang di bar alamat, atau pakai Bagikan → Sematkan peta → salin kode HTML.'
+          : (r.exact ? '✓ Peta akan menunjuk titik dari link ini.' : 'Belum ada link — peta memakai kata kunci pencarian (kurang tepat).');
+        st.style.color = r.short ? '#c0392b' : (r.exact ? '#1a7f4b' : '#7a7fae');
+      }
+      mapStatus();
+      card.querySelectorAll('[data-f]').forEach(function(input){
+        input.addEventListener('input', function(){ D.locations[i][input.dataset.f] = input.value; mapStatus(); });
+      });
+      el.appendChild(card);
+    });
+  }
+  function hucasMapSrc(loc){
+    var raw = String(loc.mapUrl || '').trim();
+    var z = '&t=&z=17&ie=UTF8&iwloc=&output=embed';
+    var m = raw.match(/<iframe[^>]+src=["']([^"']+)["']/i);
+    if(m) raw = m[1].replace(/&amp;/g,'&');
+    if(/google\.[a-z.]+\/maps\/embed/i.test(raw)) return {src: raw, exact: true};
+    if(/^https?:\/\//i.test(raw)){
+      var c = raw.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/) || raw.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/) || raw.match(/[?&](?:q|ll|query|destination)=(-?\d+\.\d+)(?:,|%2C)(-?\d+\.\d+)/);
+      if(c) return {src: 'https://maps.google.com/maps?q=' + c[1] + ',' + c[2] + z, exact: true};
+      var pl = raw.match(/\/maps\/place\/([^\/@?]+)/);
+      if(pl){ try{ return {src: 'https://maps.google.com/maps?q=' + encodeURIComponent(decodeURIComponent(pl[1].replace(/\+/g,' '))) + z, exact: true}; }catch(e){} }
+      if(/maps\.app\.goo\.gl|goo\.gl\/maps/i.test(raw)) return {src: '', exact: false, short: true};
+    }
+    return {src: 'https://maps.google.com/maps?q=' + encodeURIComponent(loc.mapQuery || ((loc.name || '') + ' ' + (loc.area || ''))) + z, exact: false};
+  }
+  function addLocation(){
+    D.locations.push({id:newId('loc'), name:'Lokasi Baru', area:'', mapQuery:'', mapUrl:'', image:'', note_id:'', note_en:'', schedules:{adult:[],kids:[],private:[]}});
+    renderLocations();
+  }
+  function removeLocation(i){ D.locations.splice(i,1); renderLocations(); }
+  function addSchedItem(i,type){ D.locations[i].schedules[type].push({time:'', days_id:'', days_en:''}); renderLocations(); }
+  function removeSchedItem(i,type,j){ D.locations[i].schedules[type].splice(j,1); renderLocations(); }
+  function updateSchedItem(i,type,j,field,val){ D.locations[i].schedules[type][j][field] = val; }
+
+  /* ---------- PRICING ---------- */
+  function renderPricing(){
+    ['adult','kids','private'].forEach(function(key){
+      var el = document.getElementById('price-' + key);
+      el.innerHTML = '';
+      D.pricing[key].forEach(function(p, i){
+        var card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML =
+          '<button class="remove warn small-btn" onclick="removePrice(\'' + key + '\',' + i + ')">Hapus</button>' +
+          '<div class="row3">' +
+            '<div><label>Jumlah Sesi (contoh: 8x)</label><input type="text" data-f="sessions" value="' + esc(p.sessions) + '"></div>' +
+            '<div><label>Harga (contoh: 350K)</label><input type="text" data-f="price" value="' + esc(p.price) + '"></div>' +
+            '<div class="checkbox-row" style="margin-top:26px;"><input type="checkbox" data-f="best" ' + (p.best?'checked':'') + '><label style="margin:0;">Paket Paling Laris</label></div>' +
+          '</div>' +
+          '<div class="row">' +
+            '<div><label>Masa berlaku (ID)</label><input type="text" data-f="valid_id" value="' + esc(p.valid_id) + '"></div>' +
+            '<div><label>Masa berlaku (EN)</label><input type="text" data-f="valid_en" value="' + esc(p.valid_en) + '"></div>' +
+          '</div>';
+        card.querySelectorAll('[data-f]').forEach(function(input){
+          input.addEventListener('input', function(){
+            var f = input.dataset.f;
+            D.pricing[key][i][f] = (input.type === 'checkbox') ? input.checked : input.value;
+          });
+        });
+        el.appendChild(card);
+      });
+    });
+  }
+  function bindPriceNotes(){
+    D.pricingNotes = D.pricingNotes || {};
+    ['adult','kids','private'].forEach(function(k){
+      D.pricingNotes[k] = D.pricingNotes[k] || {id:'', en:''};
+      ['id','en'].forEach(function(l){
+        var inp = document.getElementById('pn-' + k + '-' + l);
+        inp.value = D.pricingNotes[k][l] || '';
+        inp.oninput = function(){ D.pricingNotes[k][l] = inp.value; };
+      });
+    });
+  }
+  function addPrice(key){ D.pricing[key].push({sessions:'1x', price:'0K', valid_id:'', valid_en:'', best:false}); renderPricing(); }
+  function removePrice(key,i){ D.pricing[key].splice(i,1); renderPricing(); }
+
+  /* ---------- LEVELS ---------- */
+  function renderLevels(){
+    var el = document.getElementById('level-admin-list');
+    if(!D.levels) D.levels = [];
+    el.innerHTML = '';
+    D.levels.forEach(function(lv, i){
+      var card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML =
+        '<div style="font-family:\'Baloo 2\',sans-serif; font-weight:800; color:var(--pink); margin-bottom:6px;">Level ' + (i+1) + '</div>' +
+        '<div class="row">' +
+          '<div><label>Judul (ID)</label><input type="text" data-f="title_id" value="' + esc(lv.title_id) + '"></div>' +
+          '<div><label>Title (EN)</label><input type="text" data-f="title_en" value="' + esc(lv.title_en) + '"></div>' +
+        '</div>' +
+        '<div class="row">' +
+          '<div><label>Deskripsi (ID)</label><textarea data-f="desc_id">' + esc(lv.desc_id) + '</textarea></div>' +
+          '<div><label>Description (EN)</label><textarea data-f="desc_en">' + esc(lv.desc_en) + '</textarea></div>' +
+        '</div>';
+      card.querySelectorAll('[data-f]').forEach(function(input){
+        input.addEventListener('input', function(){ D.levels[i][input.dataset.f] = input.value; });
+      });
+      el.appendChild(card);
+    });
+  }
+
+  /* ---------- FAQ ---------- */
+  function renderFaq(){
+    var el = document.getElementById('faq-admin-list');
+    if(!D.faq) D.faq = [];
+    el.innerHTML = '';
+    D.faq.forEach(function(f, i){
+      var card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML =
+        '<button class="remove warn small-btn" onclick="removeFaq(' + i + ')">Hapus</button>' +
+        '<div class="row">' +
+          '<div><label>Pertanyaan (ID)</label><input type="text" data-f="q_id" value="' + esc(f.q_id) + '"></div>' +
+          '<div><label>Question (EN)</label><input type="text" data-f="q_en" value="' + esc(f.q_en) + '"></div>' +
+        '</div>' +
+        '<div class="row">' +
+          '<div><label>Jawaban (ID)</label><textarea data-f="a_id">' + esc(f.a_id) + '</textarea></div>' +
+          '<div><label>Answer (EN)</label><textarea data-f="a_en">' + esc(f.a_en) + '</textarea></div>' +
+        '</div>';
+      card.querySelectorAll('[data-f]').forEach(function(input){
+        input.addEventListener('input', function(){ D.faq[i][input.dataset.f] = input.value; });
+      });
+      el.appendChild(card);
+    });
+  }
+  function addFaq(){
+    D.faq.push({id:newId('faq'), q_id:'Pertanyaan baru', q_en:'New question', a_id:'', a_en:''});
+    renderFaq();
+  }
+  function removeFaq(i){ D.faq.splice(i,1); renderFaq(); }
+
+  /* ---------- BLOG ---------- */
+  function renderBlog(){
+    var el = document.getElementById('blog-list');
+    el.innerHTML = '';
+    D.blog.forEach(function(post, i){
+      var card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML =
+        '<button class="remove warn small-btn" onclick="removePost(' + i + ')">Hapus</button>' +
+        '<div class="row3">' +
+          '<div><label>Tanggal</label><input type="date" data-f="date" value="' + esc(post.date) + '"></div>' +
+          '<div><label>Tag (ID)</label><input type="text" data-f="tag_id" value="' + esc(post.tag_id) + '"></div>' +
+          '<div><label>Tag (EN)</label><input type="text" data-f="tag_en" value="' + esc(post.tag_en) + '"></div>' +
+        '</div>' +
+        '<label>Slug URL (alamat artikel: article.html?slug=...) — huruf kecil, tanpa spasi</label>' +
+        '<input type="text" data-f="slug" value="' + esc(post.slug) + '">' +
+        '<div class="row">' +
+          '<div><label>Judul (ID)</label><input type="text" data-f="title_id" value="' + esc(post.title_id) + '"></div>' +
+          '<div><label>Title (EN)</label><input type="text" data-f="title_en" value="' + esc(post.title_en) + '"></div>' +
+        '</div>' +
+        '<div class="row">' +
+          '<div><label>Ringkasan / meta description (ID)</label><textarea data-f="excerpt_id">' + esc(post.excerpt_id) + '</textarea><div class="counter" data-cnt="excerpt_id"></div></div>' +
+          '<div><label>Summary / meta description (EN)</label><textarea data-f="excerpt_en">' + esc(post.excerpt_en) + '</textarea><div class="counter" data-cnt="excerpt_en"></div></div>' +
+        '</div>' +
+        '<p class="hint" style="margin-top:12px;">Format isi artikel: baris kosong = paragraf baru · <code>## Judul bagian</code> · <code>### Sub judul</code> · <code>- poin</code> · <code>**tebal**</code> · <code>[teks link](https://...)</code></p>' +
+        '<label>Isi artikel (ID)</label><textarea class="tall" data-f="body_id">' + esc(post.body_id) + '</textarea>' +
+        '<label>Article body (EN)</label><textarea class="tall" data-f="body_en">' + esc(post.body_en) + '</textarea>' +
+        '<div style="margin-top:10px;"><a href="article.html?slug=' + encodeURIComponent(post.slug || post.id) + '" target="_blank" style="font-size:.82rem; font-weight:700; color:var(--blue);">🔗 Lihat artikel ini (pratinjau dari data.js yang sudah di-upload)</a></div>';
+      card.querySelectorAll('[data-f]').forEach(function(input){
+        input.addEventListener('input', function(){
+          var f = input.dataset.f, v = input.value;
+          if(f === 'slug'){ v = slugify(v); }
+          D.blog[i][f] = v;
+          updateCounters(card);
+          updateSize();
+        });
+      });
+      card.appendChild(imageField('Gambar utama artikel (opsional)', function(){ return D.blog[i].image; }, function(v){ D.blog[i].image = v; }, 1000));
+      updateCounters(card);
+      el.appendChild(card);
+    });
+  }
+  function updateCounters(card){
+    card.querySelectorAll('[data-cnt]').forEach(function(c){
+      var len = (card.querySelector('[data-f="' + c.dataset.cnt + '"]').value || '').length;
+      c.textContent = len + ' / 160 karakter' + (len > 160 ? ' — terlalu panjang, bisa terpotong di Google' : (len < 70 ? ' — agak pendek' : ' ✓'));
+      c.className = 'counter ' + (len > 160 ? 'bad' : (len >= 70 ? 'good' : ''));
+    });
+  }
+  function addPost(){
+    D.blog.unshift({id:newId('post'), slug:'artikel-baru-' + Date.now().toString(36), date:new Date().toISOString().slice(0,10), tag_id:'Tips', tag_en:'Tips', title_id:'Judul artikel baru', title_en:'New article title', excerpt_id:'', excerpt_en:'', body_id:'', body_en:'', image:''});
+    renderBlog();
+  }
+  function removePost(i){ if(confirm('Hapus artikel ini?')){ D.blog.splice(i,1); renderBlog(); updateSize(); } }
+
+  /* ---------- TRACKING ---------- */
+  function renderTracking(){
+    var ga = document.getElementById('trk-gaId'), px = document.getElementById('trk-metaPixelId');
+    ga.value = D.tracking.gaId || ''; px.value = D.tracking.metaPixelId || '';
+    function check(){
+      var g = ga.value.trim(), p = px.value.trim(), gm = document.getElementById('trk-ga-msg'), pm = document.getElementById('trk-px-msg');
+      D.tracking.gaId = g; D.tracking.metaPixelId = p;
+      var gOk = !g || /^G-[A-Za-z0-9]{4,}$/.test(g), pOk = !p || /^\d{8,20}$/.test(p);
+      gm.textContent = !g ? 'Kosong — Google Analytics tidak aktif' : (gOk ? 'Format ID valid ✓' : 'Format tidak sesuai — harus diawali G- (contoh G-AB12CD34EF)');
+      gm.className = 'counter ' + (!g ? '' : (gOk ? 'good' : 'bad'));
+      pm.textContent = !p ? 'Kosong — Meta Pixel tidak aktif' : (pOk ? 'Format ID valid ✓' : 'Format tidak sesuai — harus angka saja (8–20 digit)');
+      pm.className = 'counter ' + (!p ? '' : (pOk ? 'good' : 'bad'));
+    }
+    ga.oninput = check; px.oninput = check; check();
+  }
+
+  /* ---------- TESTIMONIALS ---------- */
+  function renderTesti(){
+    var el = document.getElementById('testi-admin-list');
+    D.testimonials = D.testimonials || [];
+    el.innerHTML = D.testimonials.length ? '' : '<p class="hint">Belum ada testimoni. Klik "+ Tambah Testimoni" setelah kamu punya testimoni asli.</p>';
+    D.testimonials.forEach(function(t, i){
+      var card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML =
+        '<button class="remove warn small-btn" onclick="removeTesti(' + i + ')">Hapus</button>' +
+        '<div class="row">' +
+          '<div><label>Nama (cth: Ibu Sari / Budi, 32)</label><input type="text" data-f="name" value="' + esc(t.name) + '"></div>' +
+          '<div><label>Keterangan (ID) — cth: Orang tua murid Kids Group Class</label><input type="text" data-f="role_id" value="' + esc(t.role_id) + '"></div>' +
+        '</div>' +
+        '<label>Role / description (EN)</label><input type="text" data-f="role_en" value="' + esc(t.role_en) + '">' +
+        '<div class="row">' +
+          '<div><label>Isi testimoni (ID)</label><textarea data-f="text_id">' + esc(t.text_id) + '</textarea></div>' +
+          '<div><label>Testimonial text (EN) — boleh dikosongkan, akan memakai versi ID</label><textarea data-f="text_en">' + esc(t.text_en) + '</textarea></div>' +
+        '</div>';
+      card.querySelectorAll('[data-f]').forEach(function(input){
+        input.addEventListener('input', function(){ D.testimonials[i][input.dataset.f] = input.value; updateSize(); });
+      });
+      el.appendChild(card);
+    });
+  }
+  function addTesti(){ D.testimonials.push({id:newId('testi'), name:'', role_id:'', role_en:'', text_id:'', text_en:''}); renderTesti(); }
+  function removeTesti(i){ if(confirm('Hapus testimoni ini?')){ D.testimonials.splice(i,1); renderTesti(); updateSize(); } }
+
+  /* ---------- IMAGE HELPERS ---------- */
+  function slugify(s){
+    return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+/, '').replace(/-{2,}/g, '-');
+  }
+  function compressImage(file, maxW, quality, cb){
+    var reader = new FileReader();
+    reader.onload = function(e){
+      var img = new Image();
+      img.onload = function(){
+        var scale = Math.min(1, maxW / img.width);
+        var c = document.createElement('canvas');
+        c.width = Math.round(img.width * scale); c.height = Math.round(img.height * scale);
+        var ctx = c.getContext('2d');
+        ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, c.width, c.height);
+        ctx.drawImage(img, 0, 0, c.width, c.height);
+        cb(c.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = function(){ alert('File gambar tidak bisa dibaca. Coba format JPG/PNG/WebP.'); };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+  function imageField(label, get, set, maxW){
+    var wrap = document.createElement('div');
+    wrap.className = 'img-field';
+    wrap.innerHTML =
+      '<label>' + label + '</label>' +
+      '<div class="img-row"><div class="img-prev"></div>' +
+      '<div class="img-actions">' +
+        '<button type="button" class="small-btn yellow" data-act="up">📷 Upload gambar</button>' +
+        '<input type="file" accept="image/*" class="file-input">' +
+        '<input type="text" data-act="url" placeholder="atau tempel URL gambar (https://...)">' +
+        '<button type="button" class="small-btn warn" data-act="rm">Hapus gambar</button>' +
+        '<div class="img-info"></div>' +
+      '</div></div>';
+    var prev = wrap.querySelector('.img-prev'), info = wrap.querySelector('.img-info');
+    var file = wrap.querySelector('input[type=file]'), url = wrap.querySelector('[data-act=url]');
+    function refresh(){
+      var v = get() || '';
+      prev.innerHTML = v ? '<img src="' + v + '" alt="">' : '<span>Belum ada gambar</span>';
+      url.value = (v && v.indexOf('data:') !== 0) ? v : '';
+      info.textContent = v ? (v.indexOf('data:') === 0 ? 'Gambar ter-upload · ' + Math.round(v.length * 0.75 / 1024) + ' KB' : 'Gambar dari URL') : '';
+      updateSize();
+    }
+    wrap.querySelector('[data-act=up]').addEventListener('click', function(){ file.click(); });
+    file.addEventListener('change', function(){
+      if(!file.files[0]) return;
+      info.textContent = 'Memproses...';
+      compressImage(file.files[0], maxW || 1200, 0.82, function(dataUrl){ set(dataUrl); refresh(); toast('Gambar siap — jangan lupa Download data.js'); });
+    });
+    url.addEventListener('change', function(){ set(url.value.trim()); refresh(); });
+    wrap.querySelector('[data-act=rm]').addEventListener('click', function(){ set(''); refresh(); });
+    refresh();
+    return wrap;
+  }
+  function updateSize(){
+    var kb = Math.round(JSON.stringify(D).length / 1024);
+    var el = document.getElementById('size-info');
+    if(el){ el.textContent = 'Ukuran data.js ≈ ' + kb + ' KB' + (kb > 3000 ? ' ⚠ besar, kecilkan gambar' : ''); }
+  }
+
+  /* ---------- IMAGES + SEO PANELS ---------- */
+  function ensureSchema(){
+    D.pricingNotes = D.pricingNotes || {adult:{id:'',en:''},kids:{id:'',en:''},private:{id:'',en:''}};
+    D.locations.forEach(function(l){ if(l.image === undefined) l.image = ''; });
+    D.brand = D.brand || {};
+    D.images = D.images || {hero:'', ogImage:''};
+    D.seo = D.seo || {siteUrl:'', businessName:'HUCAS Swimming Class', title_id:'', title_en:'', description_id:'', description_en:'', keywords:''};
+    D.levels = D.levels || []; D.faq = D.faq || []; D.blog = D.blog || []; D.testimonials = D.testimonials || []; D.tracking = D.tracking || {gaId:'', metaPixelId:''};
+    D.coaches.forEach(function(c){ if(c.photo === undefined) c.photo = ''; });
+    D.blog.forEach(function(p){ if(p.slug === undefined) p.slug = p.id; if(p.image === undefined) p.image = ''; if(p.body_id === undefined) p.body_id = ''; if(p.body_en === undefined) p.body_en = ''; });
+  }
+  function renderImages(){
+    var box = document.getElementById('hero-image-field');
+    box.innerHTML = '';
+    box.appendChild(imageField('Gambar Hero', function(){ return D.images.hero; }, function(v){ D.images.hero = v; }, 1100));
+    var og = document.getElementById('og-image-url');
+    og.value = D.images.ogImage || '';
+    og.oninput = function(){ D.images.ogImage = og.value.trim(); };
+  }
+  var seoFields = ['siteUrl','businessName','title_id','title_en','description_id','description_en','keywords'];
+  function seoCounter(key){
+    var c = document.getElementById('cnt-' + key); if(!c) return;
+    var len = document.getElementById('seo-' + key).value.length;
+    var max = key.indexOf('title') === 0 ? 60 : 160, min = key.indexOf('title') === 0 ? 30 : 70;
+    c.textContent = len + ' / ' + max + ' karakter' + (len > max ? ' — terlalu panjang' : (len >= min ? ' ✓' : ' — agak pendek'));
+    c.className = 'counter ' + (len > max ? 'bad' : (len >= min ? 'good' : ''));
+  }
+  function renderSeo(){
+    seoFields.forEach(function(k){
+      var el = document.getElementById('seo-' + k);
+      el.value = D.seo[k] || '';
+      el.oninput = function(){ D.seo[k] = el.value.trim ? el.value : el.value; seoCounter(k); };
+      seoCounter(k);
+    });
+  }
+  function baseUrl(){ return (D.seo.siteUrl || '').trim().replace(/\/$/, ''); }
+  function xmlEsc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function downloadText(name, text, type){
+    var blob = new Blob([text], {type: type || 'text/plain'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a'); a.href = url; a.download = name;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  }
+  function downloadSitemap(){
+    var b = baseUrl();
+    if(!b){ alert('Isi dulu "Alamat website" di atas (contoh: https://www.domainkamu.com).'); return; }
+    var today = new Date().toISOString().slice(0,10);
+    var urls = ['  <url><loc>' + xmlEsc(b + '/') + '</loc><lastmod>' + today + '</lastmod><priority>1.0</priority></url>', '  <url><loc>' + xmlEsc(b + '/blog.html') + '</loc><lastmod>' + today + '</lastmod><priority>0.8</priority></url>'];
+    D.blog.forEach(function(p){
+      urls.push('  <url><loc>' + xmlEsc(b + '/article.html?slug=' + encodeURIComponent(p.slug || p.id)) + '</loc><lastmod>' + (p.date || today) + '</lastmod><priority>0.7</priority></url>');
+    });
+    downloadText('sitemap.xml', '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + urls.join('\n') + '\n</urlset>\n', 'application/xml');
+    toast('sitemap.xml diunduh ✓');
+  }
+  function downloadRobots(){
+    var b = baseUrl();
+    var txt = 'User-agent: *\nAllow: /\nDisallow: /admin.html\nDisallow: /dashboard.html\n' + (b ? '\nSitemap: ' + b + '/sitemap.xml\n' : '');
+    downloadText('robots.txt', txt);
+    toast('robots.txt diunduh ✓');
+  }
+  function attr(s){ return String(s || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+  function buildSeoHead(){
+    var S = D.seo, b = baseUrl(), og = D.images.ogImage || '';
+    var L = ['<!-- SEO:START -->',
+      '<title>' + xmlEsc(S.title_id) + '</title>',
+      '<meta name="description" content="' + attr(S.description_id) + '">',
+      '<meta name="keywords" content="' + attr(S.keywords) + '">',
+      '<meta name="robots" content="index, follow, max-image-preview:large">',
+      '<meta name="theme-color" content="#FFD400">',
+      '<meta name="geo.region" content="ID-BA">',
+      '<meta name="geo.placename" content="Denpasar, Bali">'];
+    if(b){ L.push('<link rel="canonical" href="' + attr(b) + '/">'); }
+    L.push('<meta property="og:type" content="website">',
+      '<meta property="og:site_name" content="' + attr(S.businessName) + '">',
+      '<meta property="og:locale" content="id_ID">',
+      '<meta property="og:title" content="' + attr(S.title_id) + '">',
+      '<meta property="og:description" content="' + attr(S.description_id) + '">');
+    if(b){ L.push('<meta property="og:url" content="' + attr(b) + '/">'); }
+    if(og){ L.push('<meta property="og:image" content="' + attr(og) + '">'); }
+    L.push('<meta name="twitter:card" content="summary_large_image">');
+    if(og){ L.push('<meta name="twitter:image" content="' + attr(og) + '">'); }
+    L.push('<!-- SEO:END -->');
+    return L.join('\n');
+  }
+  function showSeoHead(){
+    document.getElementById('seo-head-box').style.display = 'block';
+    document.getElementById('seo-head-out').value = buildSeoHead();
+  }
+  function copySeoHead(){
+    var t = document.getElementById('seo-head-out'); t.select();
+    try{ document.execCommand('copy'); toast('Tag SEO disalin ✓'); }catch(e){ toast('Salin manual (Ctrl+C)'); }
+  }
+
+  /* ---------- helpers ---------- */
+  function esc(v){
+    if(v === undefined || v === null) return '';
+    return String(v).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+  }
+  function renderAll(){
+    ensureSchema(); fillBrand(); renderCoaches(); renderLocations(); renderPricing(); bindPriceNotes(); renderLevels(); renderFaq(); renderBlog(); renderTesti(); renderTracking(); renderImages(); renderSeo(); updateSize();
+  }
+
+  /* ---------- save / export / import ---------- */
+  function saveLocal(){
+    readBrand();
+    try{ localStorage.setItem('hucas-admin-data', JSON.stringify(D)); toast('Tersimpan di browser ✓'); }
+    catch(e){ toast('Gagal menyimpan: ' + e.message); }
+  }
+
+  /* ---------- publish ke GitHub ---------- */
+  var GH_KEY = 'hucas-gh';
+  function getGh(){ try{ return JSON.parse(localStorage.getItem(GH_KEY)||'{}'); }catch(e){ return {}; } }
+  function openGh(){
+    var g = getGh();
+    document.getElementById('ghRepo').value = g.repo || 'hucaswim/lesrenanghucas';
+    document.getElementById('ghBranch').value = g.branch || 'main';
+    document.getElementById('ghToken').value = g.token || '';
+    document.getElementById('ghDlg').style.display = 'flex';
+  }
+  function closeGh(){ document.getElementById('ghDlg').style.display = 'none'; }
+  function saveGh(){
+    var g = {
+      repo: document.getElementById('ghRepo').value.trim().replace(/^https?:\/\/github\.com\//,'').replace(/\.git$/,'').replace(/\/$/,''),
+      branch: document.getElementById('ghBranch').value.trim() || 'main',
+      token: document.getElementById('ghToken').value.trim()
+    };
+    if(!/^[\w.-]+\/[\w.-]+$/.test(g.repo)){ alert('Repository harus berbentuk pemilik/nama, contoh: hucaswim/lesrenanghucas'); return; }
+    if(!g.token){ alert('Token belum diisi.'); return; }
+    try{ localStorage.setItem(GH_KEY, JSON.stringify(g)); }catch(e){ alert('Browser tidak bisa menyimpan: ' + e.message); return; }
+    closeGh(); toast('Pengaturan tersimpan ✓');
+  }
+  function clearGh(){ try{ localStorage.removeItem(GH_KEY); }catch(e){} document.getElementById('ghToken').value=''; toast('Token dihapus'); }
+
+  function utf8ToBase64(str){
+    var bytes = new TextEncoder().encode(str), bin = '', CH = 0x8000;
+    for(var i=0;i<bytes.length;i+=CH){ bin += String.fromCharCode.apply(null, bytes.subarray(i, i+CH)); }
+    return btoa(bin);
+  }
+  async function publishSite(){
+    var g = getGh();
+    if(!g.token || !g.repo){ openGh(); toast('Isi pengaturan GitHub dulu'); return; }
+    readBrand();
+    try{ localStorage.setItem('hucas-admin-data', JSON.stringify(D)); }catch(e){}
+    var content = "/* HUCAS WEBSITE DATA — diedit lewat admin.html */\nwindow.HUCAS_DATA = " + JSON.stringify(D, null, 2) + ";\n";
+    if(!confirm('Publikasikan perubahan ke website sekarang?')) return;
+    var api = 'https://api.github.com/repos/' + g.repo + '/contents/data.js';
+    var hdr = {'Authorization':'Bearer ' + g.token, 'Accept':'application/vnd.github+json', 'X-GitHub-Api-Version':'2022-11-28'};
+    toast('Mengirim ke GitHub…');
+    try{
+      var sha;
+      var r1 = await fetch(api + '?ref=' + encodeURIComponent(g.branch), {headers:hdr});
+      if(r1.status === 200){ sha = (await r1.json()).sha; }
+      else if(r1.status !== 404){ throw new Error(await ghErr(r1)); }
+      var body = {message:'Update data.js dari admin (' + new Date().toISOString().slice(0,16).replace('T',' ') + ')', content: utf8ToBase64(content), branch: g.branch};
+      if(sha) body.sha = sha;
+      var r2 = await fetch(api, {method:'PUT', headers:Object.assign({'Content-Type':'application/json'}, hdr), body: JSON.stringify(body)});
+      if(!r2.ok) throw new Error(await ghErr(r2));
+      toast('Terkirim ✓ Website diperbarui dalam 1–2 menit');
+      if(confirm('Berhasil dikirim ke GitHub.\n\nWebsite akan berubah dalam 1–2 menit.\nBuka halaman proses build (Actions)?')){
+        window.open('https://github.com/' + g.repo + '/actions', '_blank');
+      }
+    }catch(err){
+      alert('Gagal publikasi: ' + err.message + '\n\nCadangan: klik Download data.js lalu upload manual ke GitHub.');
+    }
+  }
+  async function ghErr(r){
+    var t = ''; try{ t = (await r.json()).message || ''; }catch(e){}
+    if(r.status === 401) return 'Token ditolak (salah atau kedaluwarsa). Buat token baru. ' + t;
+    if(r.status === 403 || r.status === 404) return 'Akses ditolak / repo tidak ditemukan. Cek nama repo dan izin token (Contents: Read and write). ' + t;
+    if(r.status === 409 || r.status === 422) return 'Konflik versi, coba klik Publikasikan sekali lagi. ' + t;
+    return 'HTTP ' + r.status + ' ' + t;
+  }
+  function exportData(){
+    readBrand();
+    var content = "/* HUCAS WEBSITE DATA — diedit lewat admin.html */\nwindow.HUCAS_DATA = " + JSON.stringify(D, null, 2) + ";\n";
+    var blob = new Blob([content], {type:'text/javascript'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'data.js';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast('data.js diunduh ✓');
+  }
+  document.getElementById('importFile').addEventListener('change', function(e){
+    var file = e.target.files[0];
+    if(!file) return;
+    var reader = new FileReader();
+    reader.onload = function(evt){
+      try{
+        var text = evt.target.result;
+        var match = text.match(/HUCAS_DATA\s*=\s*(\{[\s\S]*\});?\s*$/);
+        var jsonStr = match ? match[1] : text;
+        var parsed = JSON.parse(jsonStr);
+        D = parsed; window.HUCAS_DATA = D;
+        renderAll();
+        toast('Data berhasil dimuat ✓');
+      }catch(err){
+        alert('Gagal membaca file: ' + err.message);
+      }
+    };
+    reader.readAsText(file);
+  });
+
+  /* ---------- init: prefer localStorage if newer edits exist ---------- */
+  try{
+    var saved = localStorage.getItem('hucas-admin-data');
+    if(saved){ D = JSON.parse(saved); window.HUCAS_DATA = D; }
+  }catch(e){}
+  renderAll();
+</script>
+</body>
+</html>

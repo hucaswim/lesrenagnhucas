@@ -332,8 +332,8 @@ window.HUCAS_DATA = {
   "seo": {
     "siteUrl": "https://lesrenanghucas.com",
     "businessName": "HUCAS Swimming Class",
-    "title_id": "HUCAS Swimming Class — Les Renang Anak, Dewasa & Private di Denpasar, Bali",
-    "title_en": "HUCAS Swimming Class — Kids, Adult & Private Swim Lessons in Denpasar, Bali",
+    "title_id": "Les Renang Denpasar Bali: Anak, Dewasa & Private | HUCAS",
+    "title_en": "Swim Lessons in Denpasar, Bali: Kids, Adult & Private | HUCAS",
     "description_id": "Les renang anak (usia 4+), dewasa, dan private 1-on-1 di Denpasar, Bali — Renon, Ubung, Padang Sambian. Coach berpengalaman. Everyone Can Swim.",
     "description_en": "Kids (age 4+), adult and private 1-on-1 swimming lessons in Denpasar, Bali — Renon, Ubung, Padang Sambian. Experienced coach. Everyone Can Swim.",
     "keywords": "les renang bali, les renang denpasar, kelas renang anak, les renang dewasa, les renang private, belajar berenang bali, swimming lessons bali, swim school denpasar, les renang renon, les renang ubung, les renang padang sambian"
