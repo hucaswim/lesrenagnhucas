@@ -265,7 +265,7 @@ function layout(o){ // o: {L,title,desc,path,altId,altEn,onHome,main,ld[],ogImg,
     '<meta property="og:type" content="' + (o.ogType || 'website') + '"><meta property="og:site_name" content="' + esc(BIZ) + '"><meta property="og:locale" content="' + T[L].ogLocale + '">' +
     '<meta property="og:title" content="' + esc(o.title) + '"><meta property="og:description" content="' + esc(o.desc) + '"><meta property="og:url" content="' + canon + '"><meta property="og:image" content="' + esc(og) + '">\n' +
     '<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="' + esc(o.title) + '"><meta name="twitter:description" content="' + esc(o.desc) + '"><meta name="twitter:image" content="' + esc(og) + '">\n' +
-    '<link rel="icon" href="/logo.png"><link rel="apple-touch-icon" href="/logo.png">\n' +
+    '<link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="icon" type="image/png" href="/favicon-96.png" sizes="96x96"><link rel="icon" type="image/png" href="/favicon-192.png" sizes="192x192"><link rel="apple-touch-icon" href="/apple-touch-icon.png">\n' +
     '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n' +
     '<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">\n' +
     '<link rel="stylesheet" href="/style.css?v=' + BUILD_HASH + '">\n' + (o.extraHead || '') + (o.ld || []).map(ldScript).join('\n') + '\n</head>\n<body>\n' +
@@ -433,7 +433,7 @@ write('llms.txt', '# ' + BIZ + '\n\n> Les renang untuk anak (4+), dewasa, dan pr
 /* aset statis */
 write('style.css', STYLE + '\n' + SUBCSS);
 copy('template/site.js', 'site.js');
-['404.html', 'dashboard.html', 'firebase-config.js', 'logo.png', 'privacy.html'].forEach(f => copy(f));
+['404.html', 'dashboard.html', 'firebase-config.js', 'logo.png', 'privacy.html', 'favicon.ico', 'favicon-48.png', 'favicon-96.png', 'favicon-192.png', 'apple-touch-icon.png'].forEach(f => copy(f));
 write('tracking.js', fs.readFileSync(path.join(SRC, 'tracking.js'), 'utf8')
   .replace("function lang(){ try{ return localStorage.getItem('hucas-lang') === 'en' ? 'en' : 'id'; }catch(e){ return 'id'; } }", "function lang(){ return (document.documentElement.lang || 'id').slice(0, 2) === 'en' ? 'en' : 'id'; }")
   .replace(/href="privacy\.html"/g, 'href="/privacy.html"'));
