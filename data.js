@@ -1,14 +1,14 @@
 /* HUCAS WEBSITE DATA — diedit lewat admin.html */
 window.HUCAS_DATA = {
   "brand": {
-    "phone": "6285111411246",
-    "phoneDisplay": "+62 851-1141-1246",
+    "phone": "6282145073356",
+    "phoneDisplay": "082145073356",
     "email": "hucaswim@gmail.com",
     "instagram": "hucasswimmingclass",
     "bookingWebhookUrl": "",
-    "waBusiness": "6285111411246",
-    "waBusinessDisplay": "+62 851-1141-1246",
-    "waBusinessLink": "https://wa.me/message/WY7QD63ESG47M1"
+    "waBusiness": "",
+    "waBusinessDisplay": "",
+    "waBusinessLink": ""
   },
   "coaches": [
     {
@@ -35,8 +35,8 @@ window.HUCAS_DATA = {
         "adult": [
           {
             "time": "08:00 – 09:00",
-            "days_id": "Senin – Sabtu",
-            "days_en": "Mon – Sat"
+            "days_id": "Senin – sabtu",
+            "days_en": "Mon – sat"
           }
         ],
         "kids": [],
@@ -73,7 +73,7 @@ window.HUCAS_DATA = {
             "days_en": "Mon, Fri"
           },
           {
-            "time": "17:00 – 18:00",
+            "time": "17:00",
             "days_id": "Rabu",
             "days_en": "Wed"
           }
@@ -113,7 +113,7 @@ window.HUCAS_DATA = {
         "private": [
           {
             "time": "14:30 – 15:30",
-            "days_id": "Selasa & Kamis",
+            "days_id": "Selasa & Kamis,",
             "days_en": "Tue & Thu"
           }
         ]
@@ -125,9 +125,9 @@ window.HUCAS_DATA = {
   "pricing": {
     "adult": [
       {
-        "sessions": "1x",
+        "sessions": "1 sesi ",
         "price": "140K",
-        "valid_id": "harian",
+        "valid_id": "harian ",
         "valid_en": "daily",
         "best": false
       },
@@ -141,38 +141,31 @@ window.HUCAS_DATA = {
       {
         "sessions": "8x",
         "price": "800K",
-        "valid_id": "Berlaku 1 bulan (seminggu 1x latihan)",
+        "valid_id": "Berlaku 1 bulan (seminggu 2-3x latihan)",
         "valid_en": "Valid 1 months",
         "best": true
       },
       {
         "sessions": "16x",
         "price": "1.700K",
-        "valid_id": "Berlaku 2 bulan  (seminggu 2-3x latihan)",
-        "valid_en": "Valid 6 months",
+        "valid_id": "Berlaku 2 bulan  (seminggu 4-5x latihan)",
+        "valid_en": "Valid 2 months",
         "best": false
       }
     ],
     "kids": [
       {
         "sessions": "4x",
-        "price": "300K",
-        "valid_id": "Berlaku 1 bulan (seminggu 1x latihan)",
-        "valid_en": "Valid 1 month",
-        "best": false
-      },
-      {
-        "sessions": "8x",
-        "price": "350K",
-        "valid_id": "Berlaku 1 bulan (seminggu 2x latihan)",
-        "valid_en": "Valid 1 month",
+        "price": "250K",
+        "valid_id": "Berlaku 1 bulan (seminggu 1x latihan )",
+        "valid_en": "Valid 1 months",
         "best": false
       },
       {
         "sessions": "12x",
         "price": "400K",
         "valid_id": "Berlaku 1 bulan (seminggu 3x latihan)",
-        "valid_en": "Valid 1 month",
+        "valid_en": "Valid 1 months",
         "best": true
       }
     ],
@@ -181,7 +174,7 @@ window.HUCAS_DATA = {
         "sessions": "1x",
         "price": "300K",
         "valid_id": "satu hari",
-        "valid_en": "one day",
+        "valid_en": "one day ",
         "best": false
       },
       {
@@ -195,14 +188,14 @@ window.HUCAS_DATA = {
         "sessions": "8x",
         "price": "1.500K",
         "valid_id": "Berlaku 1 bulan (seminggu 2x latihan )",
-        "valid_en": "Valid 3 months",
+        "valid_en": "Valid 1 months",
         "best": true
       },
       {
         "sessions": "16x",
         "price": "2.900K",
         "valid_id": "Berlaku 1 bulan (seminggu 3x latihan )",
-        "valid_en": "Valid 6 months",
+        "valid_en": "Valid 2 months",
         "best": false
       }
     ]
@@ -330,21 +323,21 @@ window.HUCAS_DATA = {
     "ogImage": ""
   },
   "seo": {
-    "siteUrl": "https://lesrenanghucas.com",
+    "siteUrl": "",
     "businessName": "HUCAS Swimming Class",
-    "title_id": "Les Renang Denpasar Bali: Anak, Dewasa & Private | HUCAS",
-    "title_en": "Swim Lessons in Denpasar, Bali: Kids, Adult & Private | HUCAS",
-    "description_id": "Les renang anak (usia 4+), dewasa, dan private 1-on-1 di Denpasar, Bali — Renon, Ubung, Padang Sambian. Coach berpengalaman. Everyone Can Swim.",
-    "description_en": "Kids (age 4+), adult and private 1-on-1 swimming lessons in Denpasar, Bali — Renon, Ubung, Padang Sambian. Experienced coach. Everyone Can Swim.",
+    "title_id": "HUCAS Swimming Class — Les Renang Anak, Dewasa & Private di Denpasar, Bali",
+    "title_en": "HUCAS Swimming Class — Kids, Adult & Private Swim Lessons in Denpasar, Bali",
+    "description_id": "Les renang anak (usia 4+), dewasa, dan private 1-on-1 di Denpasar, Bali — Renon, Ubung, Padang Sambian. Coach berpengalaman, kelas kecil maks. 8 anak. Everyone Can Swim.",
+    "description_en": "Kids (age 4+), adult and private 1-on-1 swimming lessons in Denpasar, Bali — Renon, Ubung, Padang Sambian. Experienced coach, small classes of max. 8 kids. Everyone Can Swim.",
     "keywords": "les renang bali, les renang denpasar, kelas renang anak, les renang dewasa, les renang private, belajar berenang bali, swimming lessons bali, swim school denpasar, les renang renon, les renang ubung, les renang padang sambian"
   },
   "testimonials": [
     {
       "id": "testi-1793597433563-1",
-      "name": "Vior",
+      "name": "Vior ",
       "role_id": "murid Adult Group Class",
       "role_en": "student - Adult Group Class",
-      "text_id": "seru banget kelas renangnya sama kak Arya, ngajarinnya detail tau tehnik-tehniknya, bisa nganalisa gerakan gerakan yang salah. Jadi cepet bisa berenangnya",
+      "text_id": "seru banget kelas renangnya sama kak Arya, ngajarinnya detail tau tehnik-tehniknya, bisa nganalisa gerakan gerakan yang salah. Jadi cepet bisa berenangnya ",
       "text_en": "The swimming lessons with Arya were really great! He teaches the techniques in great detail and is able to analyze any incorrect movements—it really helped me learn to swim quickly."
     }
   ],
@@ -354,8 +347,8 @@ window.HUCAS_DATA = {
   },
   "pricingNotes": {
     "adult": {
-      "id": "Adult Group Class: maksimal 6 orang per class.",
-      "en": "Adult Group Class: maximum 6 people per class."
+      "id": "",
+      "en": ""
     },
     "kids": {
       "id": "",
